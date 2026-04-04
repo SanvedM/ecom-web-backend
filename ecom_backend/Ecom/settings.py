@@ -12,8 +12,9 @@ SECRET_KEY = os.environ.get(
     'django-insecure-em6o*^!qyl7158@v+cg&_#$4!1_bf6kwkg!6-cli^1f9^xlcai'
 )
 
-# DEBUG
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = True
+# DEBUG = os.environ.get("DEBUG", "False") == "True"
+
 
 ALLOWED_HOSTS = ['*']
 
