@@ -1,11 +1,28 @@
 from rest_framework import serializers
 from .models import *
 
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category
+#         fields = "__all__"
+
+
 class CategorySerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
         fields = "__all__"
 
+    def get_images(self, obj):
+        request = self.context.get("request")
+
+        if obj.images:
+            if request:
+                return request.build_absolute_uri(obj.images.url)
+            return obj.images.url
+
+        return None
 
 from rest_framework import serializers
 
