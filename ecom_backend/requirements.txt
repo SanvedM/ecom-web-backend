@@ -45,6 +45,7 @@ PyMySQL==1.1.2
 python-decouple==3.8
 python-dotenv==1.2.1
 python-multipart==0.0.22
+psycopg2-binary==2.9.10
 PyYAML==6.0.3
 rich==14.3.3
 rich-toolkit==0.19.7
