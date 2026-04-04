@@ -7,13 +7,27 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-em6o*^!qyl7158@v+cg&_#$4!1_bf6kwkg!6-cli^1f9^xlcai')
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY',
+    'django-insecure-em6o*^!qyl7158@v+cg&_#$4!1_bf6kwkg!6-cli^1f9^xlcai'
+)
 
-# DEBUG (auto from env)
+# DEBUG
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = ['*']
 
+# ✅ CSRF FIX (IMPORTANT)
+CSRF_TRUSTED_ORIGINS = [
+    "https://sanved-ecom.up.railway.app"
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# CORS
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -35,7 +49,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,11 +78,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Ecom.wsgi.application'
 
-# DATABASE (SQLite local / PostgreSQL on Railway)
+# DATABASE (Railway Postgres / fallback SQLite)
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600
+        conn_max_age=600,
+        ssl_require=True   # ✅ important for Railway
     )
 }
 
@@ -88,10 +103,8 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
-# settings.py
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# ADD THIS LINE:
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media
