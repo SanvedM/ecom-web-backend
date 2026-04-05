@@ -30,7 +30,6 @@ def register_api(request):
     if not email or not username or not password:
         return Response({"error": "All fields required"}, status=400)
 
-    # 🔥 DUPLICATE CHECK
     if User.objects.filter(email=email, is_active=True).exists():
         return Response({"error": "Email already registered"}, status=400)
 
@@ -39,7 +38,6 @@ def register_api(request):
 
     otp = str(random.randint(100000, 999999))
 
-    # 🔥 CREATE OR UPDATE TEMP USER
     user, created = User.objects.update_or_create(
         email=email,
         defaults={
@@ -51,18 +49,25 @@ def register_api(request):
         }
     )
 
-    # 🔥 SEND EMAIL
-    send_mail(
-        'Your OTP Code',
-        f'Your OTP is {otp}',
-        'yourgmail@gmail.com',
-        [email],
-        fail_silently=False,
-    )
+    # 🔥 SAFE EMAIL BLOCK
+    try:
+        send_mail(
+            'Your OTP Code',
+            f'Your OTP is {otp}',
+            'yourgmail@gmail.com',
+            [email],
+            fail_silently=False,
+        )
+        print("✅ Email sent")
 
-    print(f"OTP: {otp}")
+    except Exception as e:
+        print("❌ Email failed:", e)
+        print("🔐 OTP (fallback):", otp)
 
-    return Response({"message": "OTP sent to email"})
+    return Response({
+        "message": "OTP sent (check email or logs)"
+    })
+
 
 @api_view(['POST'])
 def verify_otp_register(request):
