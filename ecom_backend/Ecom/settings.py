@@ -164,4 +164,15 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'test2intellect@gmail.com'
-EMAIL_HOST_PASSWORD = 'wjka tqqb eatu gxpf'
+EMAIL_HOST_PASSWORD = 'wjkatqqbeatugxpf'
+EMAIL_TIMEOUT = 10
+
+# 📧 SENDGRID EMAIL CONFIG
+
+# EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+
+# SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
+
+# SENDGRID_SANDBOX_MODE_IN_DEBUG = False  # True = don't actually send emails
+
+# DEFAULT_FROM_EMAIL = "test2intellect@gmail.com"

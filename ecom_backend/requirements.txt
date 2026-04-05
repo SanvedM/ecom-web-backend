@@ -13,3 +13,5 @@ cloudinary==1.44.1
 django-cloudinary-storage==0.3.0
 
 pillow==12.1.1
+sendgrid==3.6.5
+sendgrid-django==4.2.0
