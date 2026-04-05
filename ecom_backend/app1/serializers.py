@@ -1,10 +1,25 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from .models import *
 
 # class CategorySerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Category
 #         fields = "__all__"
+
+
+
+
+class CustomTokenSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        if not self.user.is_mobile_verified:
+            raise serializers.ValidationError("Mobile number not verified")
+
+        return data
 
 
 class CategorySerializer(serializers.ModelSerializer):

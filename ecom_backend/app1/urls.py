@@ -4,12 +4,14 @@ from .utills.Category import category_list
 from .utills.Product import product_list,prod_cate,product_details
 from .utills.Cart import add_to_cart_api,mycart,update_cart_item,delete_cart_items
 from .utills.Order import create_order
-from .views import register_api
-from rest_framework_simplejwt.views import TokenObtainPairView
+from .views import register_api,CustomLoginView,verify_otp_register,forgot_password,reset_password
 
 urlpatterns = [
-    path('register', register_api),
-    path('login', TokenObtainPairView.as_view()),
+    path('register', register_api,name="register"),
+    path('login', CustomLoginView.as_view(),name="login"),
+    path('verify-otp', verify_otp_register,name="verify-otp"),
+    path("forgot-password",forgot_password,name="forgot_password"),
+    path("reset-password",reset_password,name="reset_password"),
     path('cate-list',category_list,name='cate_list' ),
     path('prod-list',product_list,name='prod_list'),
     path('prod-cate/<int:cate>',prod_cate,name='prod_cate'),

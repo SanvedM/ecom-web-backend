@@ -1,15 +1,33 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
 
 class Customeuser(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('customer', 'Customer'),
     )
+
+    mobile = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    is_mobile_verified = models.BooleanField(default=False)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='customer')
 
+    # 🔥 NEW FIELDS
+    email_otp = models.CharField(max_length=6, null=True, blank=True)
+    otp_created_at = models.DateTimeField(null=True, blank=True)
+    reset_otp = models.CharField(max_length=6, null=True, blank=True)
+    reset_otp_created_at = models.DateTimeField(null=True, blank=True)
 
+    def is_reset_otp_expired(self):
+        from datetime import timedelta
+        return self.reset_otp_created_at < timezone.now() - timedelta(minutes=10)
+
+    def is_otp_expired(self):
+        from datetime import timedelta
+        return self.otp_created_at < timezone.now() - timedelta(minutes=5)
+    
+    
 class Address(models.Model):
     user = models.ForeignKey(Customeuser, on_delete=models.CASCADE, related_name="addresses")
     full_name = models.CharField(max_length=255)
