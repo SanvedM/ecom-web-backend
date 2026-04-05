@@ -98,8 +98,6 @@ def verify_otp_register(request):
     return Response({"message": "User registered successfully"}, status=201)
 
 
-
-
 @api_view(['POST'])
 def forgot_password(request):
     email = request.data.get("email")
@@ -115,20 +113,24 @@ def forgot_password(request):
     user.reset_otp_created_at = timezone.now()
     user.save()
 
-    send_mail(
-        'Reset Password OTP',
-        f'Your OTP is {otp}',
-        'yourgmail@gmail.com',
-        [email],
-        fail_silently=False,
-    )
+    # 🔥 SAFE EMAIL BLOCK
+    try:
+        send_mail(
+            'Reset Password OTP',
+            f'Your OTP is {otp}',
+            'yourgmail@gmail.com',
+            [email],
+            fail_silently=False,
+        )
+        print("✅ Reset email sent")
 
-    print("RESET OTP:", otp)
+    except Exception as e:
+        print("❌ Email failed:", e)
+        print("🔐 RESET OTP (fallback):", otp)
 
-    return Response({"message": "OTP sent to email"})
-
-
-
+    return Response({
+        "message": "OTP sent (check email or logs)"
+    })
 
 @api_view(['POST'])
 def reset_password(request):
