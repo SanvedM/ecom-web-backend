@@ -20,18 +20,22 @@ ALLOWED_HOSTS = ['*']
 
 # ✅ CSRF FIX (IMPORTANT)
 CSRF_TRUSTED_ORIGINS = [
-    "https://sanved-ecom.up.railway.app"
+    "https://sanved-ecom.up.railway.app",
+    "http://localhost:5173",
 ]
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 
+CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://sanved-ecom.up.railway.app"
 ]
 
 # Applications
@@ -56,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -138,11 +142,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "app1.Customeuser"
 
 # DRF + JWT
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    
 }
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
@@ -150,13 +157,35 @@ SIMPLE_JWT = {
 }
 
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get("CLOUDINARY_CLOUD_NAME"),
-    'API_KEY': os.environ.get("CLOUDINARY_API_KEY"),
-    'API_SECRET': os.environ.get("CLOUDINARY_API_SECRET"),
-}
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': os.environ.get("CLOUDINARY_CLOUD_NAME"),
+#     'API_KEY': os.environ.get("CLOUDINARY_API_KEY"),
+#     'API_SECRET': os.environ.get("CLOUDINARY_API_SECRET"),
+# }
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': os.environ.get("CLOUDINARY_CLOUD_NAME", ""),
+#     'API_KEY': os.environ.get("CLOUDINARY_API_KEY", ""),
+#     'API_SECRET': os.environ.get("CLOUDINARY_API_SECRET", ""),
+# }
+
+
+import cloudinary
+
+cloudinary.config(
+    cloud_name="do6mspoma",
+    api_key="971916956446722",
+    api_secret="kxRiaK-XYyW7piTlRNEW7_ZNmys",
+)
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': "do6mspoma",
+#     'API_KEY': "971916956446722",
+#     'API_SECRET': "kxRiaK-XYyW7piTlRNEW7_ZNmys",
+# }
+
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

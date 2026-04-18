@@ -3,6 +3,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import *
 
+
 # class CategorySerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Category
@@ -173,3 +174,44 @@ class CreateOrderSerializer(serializers.ModelSerializer):
  
         return order_item
         
+
+
+
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(source="variant.product.name", read_only=True)
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrderItem
+        fields = ["id", "product_name", "quantity", "price", "image"]
+
+    def get_image(self, obj):
+        request = self.context.get("request")
+
+        # 🔥 SAME LOGIC AS CART
+        image = obj.variant.product.images.filter(is_primary=True).first()
+
+        if not image:
+            image = obj.variant.product.images.first()
+
+        if image:
+            if request:
+                return request.build_absolute_uri(image.image.url)
+            return image.image.url
+
+        return None
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ["id", "name", "address", "total_amount", "status", "items", "created_at"]
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = "__all__"
+        read_only_fields = ["user"]
