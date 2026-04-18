@@ -90,8 +90,18 @@ def create_order(request):
 
     # CREATE ORDER ITEMS
     for item in cart_items:
+        variant = item.variant
         price = item.variant.price
         quantity = item.quantity
+
+        if variant.stock < quantity:
+            return Response({
+                "error": f"{variant.product.name} is out of stock"
+            }, status=400)
+
+        # ✅ REDUCE STOCK
+        variant.stock -= quantity
+        variant.save()
 
         total += price * quantity
 
